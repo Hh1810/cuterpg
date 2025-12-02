@@ -1,144 +1,310 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>可愛RPG學習平台</title>
-<style>
-body {
-  font-family: "Helvetica", sans-serif;
-  background: #ffeef4;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-#app {
-  width: 95%;
-  max-width: 480px;
-  margin-top: 20px;
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-h1 {
-  text-align: center;
-  color: #ff7fa8;
-  margin-bottom: 10px;
-}
-.level-box {
-  background: #fff0f6;
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-.task-card {
-  background: #fffbfd;
-  border: 2px solid #ffd2e6;
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #ff9ac2;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-button:hover {
-  background: #ff7fa8;
-}
-.badge {
-  display: inline-block;
-  background: #ffb5d6;
-  padding: 6px 12px;
-  border-radius: 20px;
-  margin: 4px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>學習小精靈 — 綠色版 RPG（可直接執行）</title>
+  <style>
+    /* 綠色主題、簡潔安全版 */
+    :root{
+      --bg:#eeffef;
+      --panel:#f6fff8;
+      --accent:#3aa45e;
+      --muted:#5b6b5a;
+      --soft:#dff7e6;
+      --shadow: 0 8px 20px rgba(58,164,94,0.10);
+      font-family: 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#133; -webkit-font-smoothing:antialiased}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:linear-gradient(90deg,#dff7e6,#eefff0);box-shadow:var(--shadow)}
+    .logo{font-weight:700;font-size:18px;color:var(--accent)}
+    .app{max-width:1000px;margin:18px auto;border-radius:12px;overflow:hidden;padding:12px}
+    .main{display:flex;gap:16px;padding:6px}
+    .sidebar{width:260px}
+    .content{flex:1;display:flex;flex-direction:column;gap:12px}
+    .panel{background:var(--panel);padding:12px;border-radius:12px;box-shadow:var(--shadow)}
+    .avatar{font-size:44px;background:linear-gradient(90deg,#f0fff3,#e8fff0);width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 12px rgba(0,0,0,0.04)}
+    .xpbar{width:80%;height:12px;background:#eef6ee;border-radius:999px;margin-top:8px;overflow:hidden}
+    #xpFill{height:100%;width:24%;background:linear-gradient(90deg,var(--accent),#7bdc93)}
+    .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .badge{background:var(--soft);padding:6px 8px;border-radius:999px;font-size:12px;color:#084a20}
+    .quests-preview{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .quest-card{padding:10px;border-radius:10px;background:linear-gradient(180deg,#ffffff,#f7fff9);border:1px dashed #dff4dd}
+    .quest-type{font-weight:700;color:var(--accent)}
+    button{background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;border:none;cursor:pointer}
+    button.small{padding:6px 8px;font-size:13px}
+    button.secondary{background:#fff;color:var(--accent);border:1px solid rgba(0,0,0,0.06)}
+    label{display:block;margin:6px 0}
+    textarea{min-height:100px;width:100%;padding:8px;border-radius:8px;border:1px solid #e6f3e8}
+    input[type="text"]{width:100%;padding:8px;border-radius:8px;border:1px solid #e6f3e8}
+    .muted{color:var(--muted);font-size:13px;margin-top:6px}
+    .footer{text-align:center;padding:10px;color:var(--muted);font-size:13px;margin-top:8px}
+    a.small-link{color:var(--accent);font-size:13px;text-decoration:none}
+  </style>
 </head>
 <body>
-<div id="app">
-  <h1>可愛RPG學習平台</h1>
-  <div class="level-box">
-    <p>等級：<span id="level">1</span></p>
-    <p>經驗值：<span id="exp">0</span> / 100</p>
+  <div class="topbar">
+    <div class="logo">🌿 學習小精靈（綠）</div>
+    <div>
+      <button id="deployHint" class="small secondary">部署 & 安全說明</button>
+    </div>
   </div>
 
-  <div class="task-card">
-    <h3>今日可愛任務</h3>
-    <p id="taskText">按下按鈕生成任務 ❤️</p>
-    <button onclick="generateTask()">✨ 生成任務（AI）</button>
+  <div class="app">
+    <div class="main">
+      <aside class="sidebar">
+        <div class="panel" style="text-align:center">
+          <div class="avatar">🦋</div>
+          <h3 id="playerName">冒險者</h3>
+          <div>Lv <strong id="level">1</strong></div>
+          <div class="xpbar"><div id="xpFill"></div></div>
+        </div>
+
+        <div class="panel">
+          <h4>徽章</h4>
+          <div id="badges" class="badges"></div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div class="panel">
+          <h3>今日任務</h3>
+          <p class="muted">完成任務可獲得 XP、徽章與稱號。</p>
+
+          <div id="questsPreview" class="quests-preview"></div>
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button id="startBtn">開始任務（先用 mock / 離線）</button>
+            <button id="fetchGeminiBtn" class="secondary">用 Gemini 產生（需要金鑰）</button>
+          </div>
+        </div>
+
+        <div class="panel" id="questPanel" style="display:none">
+          <button id="backBtn" class="secondary small">← 返回</button>
+          <h3 id="questTitle">任務</h3>
+          <div id="questArea"></div>
+          <div style="margin-top:10px;text-align:right">
+            <button id="submitBtn">提交答案</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h4>設定（如果你要接 Gemini，複製 config.example.js 為 config.js）</h4>
+          <p class="muted">不想處理 key？按 <a id="proxyOffer" class="small-link">我要 proxy（安全）</a>，我會給你步驟。</p>
+          <pre style="background:#f0fff6;padding:8px;border-radius:6px">/* config.example.js */
+const GEMINI_API_KEY = 'AIzaSyA1qz0SSfgtykSctZ35rhLI1IesiSxN4UQ'; // 不要放到公開 repo!
+const GEMINI_MODEL = 'models/gemini-1.5-pro';
+const GEMINI_ENDPOINT_BASE = 'https://generativelanguage.googleapis.com/v1beta2';
+</pre>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">© 學習小精靈 — 本地可執行 Demo（綠）</div>
   </div>
 
-  <div class="task-card">
-    <h3>輸入回答</h3>
-    <input id="answer" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ffcfe2;" />
-    <button style="margin-top:10px;" onclick="submitAnswer()">送出答案</button>
-  </div>
+  <script>
+  /****************************************************************
+   * 立即可運行的單檔版 (不需後端)
+   * - 若沒有 config.js 或沒有金鑰，會自動使用 mock 題目（可離線運行）
+   * - 若你放置 config.js 並在裡面設定 GEMINI_API_KEY，按「用 Gemini 產生」會嘗試呼叫 Gemini REST
+   * - 若你要公開部署（GitHub Pages），請不要把 config.js（含 KEY）放到公開 repo
+   ****************************************************************/
 
-  <div class="task-card">
-    <h3>獎勵徽章</h3>
-    <div id="badges"></div>
-  </div>
-</div>
+  // 安全：嘗試載入 config.js（如果使用者已放）
+  let GEMINI_API_KEY = null;
+  let GEMINI_MODEL = null;
+  let GEMINI_ENDPOINT_BASE = null;
+  try {
+    // window.config.js should set GEMINI_API_KEY, GEMINI_MODEL, GEMINI_ENDPOINT_BASE
+    if (window.GEMINI_API_KEY) GEMINI_API_KEY = window.GEMINI_API_KEY;
+    if (window.GEMINI_MODEL) GEMINI_MODEL = window.GEMINI_MODEL;
+    if (window.GEMINI_ENDPOINT_BASE) GEMINI_ENDPOINT_BASE = window.GEMINI_ENDPOINT_BASE;
+  } catch(e){/* ignore */}
 
-<script>
-let currentTask = "";
-let level = 1;
-let exp = 0;
-const API_KEY = "AIzaSyA1qz0SSfgtykSctZ35rhLI1IesiSxN4UQ"; // 替換你的金鑰
+  // App state
+  const state = { xp: 20, level: 1, badges: [] };
+  let quests = [];
+  let currentIndex = 0;
 
-async function generateTask() {
-  const prompt = "生成一個可愛、有趣、簡短的英文或程式學習挑戰。";
+  // DOM
+  const questsPreviewEl = document.getElementById('questsPreview');
+  const startBtn = document.getElementById('startBtn');
+  const fetchGeminiBtn = document.getElementById('fetchGeminiBtn');
+  const questPanel = document.getElementById('questPanel');
+  const questArea = document.getElementById('questArea');
+  const questTitle = document.getElementById('questTitle');
+  const backBtn = document.getElementById('backBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const badgesEl = document.getElementById('badges');
+  const xpFill = document.getElementById('xpFill');
+  const levelEl = document.getElementById('level');
+  const deployHint = document.getElementById('deployHint');
+  const proxyOffer = document.getElementById('proxyOffer');
 
-  const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + API_KEY, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  function renderProfile(){
+    xpFill.style.width = Math.min(100, (state.xp % 100)) + '%';
+    levelEl.textContent = state.level;
+    badgesEl.innerHTML = '';
+    state.badges.forEach(b => {
+      const d = document.createElement('div'); d.className='badge'; d.textContent = b; badgesEl.appendChild(d);
+    });
+  }
+
+  function mockGenerateQuests(){
+    return [
+      { type:'英文', payload:{ question:'Which word means \"友善\"?', choices:['hostile','kind','sad','tall'], answer:1 }},
+      { type:'程式', payload:{ question:'What does console.log do in JS?', choices:['show value','delete file','create var','none'], answer:0 }},
+      { type:'AI', payload:{ question:'Write one short tip to remember new words.' } }
+    ];
+  }
+
+  function renderQuestsPreview(){
+    questsPreviewEl.innerHTML = '';
+    quests.forEach((q,i) => {
+      const card = document.createElement('div'); card.className='quest-card';
+      card.innerHTML = `<div class="quest-type">${q.type}</div><div class="quest-short">${q.payload.question}</div>`;
+      questsPreviewEl.appendChild(card);
+    });
+  }
+
+  startBtn.addEventListener('click', ()=> {
+    // Local mock version: immediate and works offline
+    quests = mockGenerateQuests();
+    renderQuestsPreview();
+    showQuest(0);
   });
 
-  const data = await response.json();
-  currentTask = data.candidates[0].content.parts[0].text;
+  backBtn.addEventListener('click', ()=> {
+    questPanel.style.display = 'none';
+  });
 
-  document.getElementById("taskText").innerText = currentTask;
-}
-
-function submitAnswer() {
-  const userAns = document.getElementById("answer").value.trim();
-  if (!userAns) return alert("請輸入答案~");
-
-  gainExp(30);
-  addBadge();
-  alert("答題成功！你獲得經驗值 +30 ❤️");
-}
-
-function gainExp(amount) {
-  exp += amount;
-  if (exp >= 100) {
-    level++;
-    exp = exp - 100;
-    alert("升級啦！等級提升到 Lv." + level + " ❤️");
+  function showQuest(idx){
+    currentIndex = idx;
+    const q = quests[idx];
+    if(!q) return;
+    questTitle.textContent = `${q.type} 任務`;
+    questPanel.style.display = 'block';
+    renderQuest(q);
   }
-  document.getElementById("level").innerText = level;
-  document.getElementById("exp").innerText = exp;
-}
 
-function addBadge() {
-  const badgeBox = document.getElementById("badges");
-  const badge = document.createElement("div");
-  badge.className = "badge";
-  badge.innerText = "可愛挑戰完成 ✨";
-  badgeBox.appendChild(badge);
-}
-</script>
+  function renderQuest(q){
+    questArea.innerHTML = '';
+    const p = document.createElement('p'); p.textContent = q.payload.question; questArea.appendChild(p);
+    if(Array.isArray(q.payload.choices) && q.payload.choices.length){
+      q.payload.choices.forEach((c,i)=>{
+        const label = document.createElement('label');
+        const r = document.createElement('input'); r.type='radio'; r.name='choice'; r.value=i;
+        label.appendChild(r); label.append(' ' + c); questArea.appendChild(label);
+      });
+    } else {
+      const ta = document.createElement('textarea'); ta.placeholder='在此輸入答案...'; questArea.appendChild(ta);
+    }
+  }
+
+  submitBtn.addEventListener('click', ()=> {
+    const q = quests[currentIndex];
+    const sel = document.querySelector('input[name="choice"]:checked');
+    let correct = false;
+    if(sel && q.payload.answer != null) correct = String(sel.value) === String(q.payload.answer);
+    else correct = true; // free text - give partial credit
+
+    const xpGain = correct ? 40 : 10;
+    state.xp = (state.xp || 0) + xpGain;
+    if(state.xp >= 200){
+      state.level += 1;
+      state.xp = state.xp - 200;
+      if(!state.badges.includes('升級勇者')) state.badges.push('升級勇者');
+    }
+    if(!state.badges.includes('任務達成')) state.badges.push('任務達成');
+
+    alert('任務完成！獲得 XP: ' + xpGain);
+    renderProfile();
+
+    if(currentIndex < quests.length - 1) showQuest(currentIndex+1);
+    else questPanel.style.display = 'none';
+  });
+
+  // Gemini button (optional) - will attempt REST call only if GEMINI_API_KEY present in config.js
+  fetchGeminiBtn.addEventListener('click', async ()=>{
+    if(!GEMINI_API_KEY){
+      alert('找不到 Gemini 金鑰，系統會先使用本機離線題目。若要使用 Gemini，請建立 config.js 並把 GEMINI_API_KEY 放入。');
+      quests = mockGenerateQuests();
+      renderQuestsPreview();
+      showQuest(0);
+      return;
+    }
+    try {
+      quests = await fetchQuestsFromGemini();
+      renderQuestsPreview();
+      showQuest(0);
+    } catch(err){
+      console.error(err);
+      alert('呼叫 Gemini 發生錯誤：' + err.message + '\\n系統改為使用本機題目。');
+      quests = mockGenerateQuests();
+      renderQuestsPreview();
+      showQuest(0);
+    }
+  });
+
+  // function to call Gemini REST (best-effort; may be blocked by CORS depending on environment)
+  async function fetchQuestsFromGemini(){
+    const prompts = [
+      {type:'英文', prompt:'Generate a beginner English multiple choice question (4 choices) about vocabulary. Respond JSON only: {\"question\":..., \"choices\":[...], \"answer\":index}'},
+      {type:'程式', prompt:'Generate a beginner JavaScript multiple choice question (4 choices). Respond JSON only.'},
+      {type:'AI', prompt:'Generate a single-sentence study tip and return as JSON {\"question\":\"...\"}.'}
+    ];
+    const out = [];
+    for(const p of prompts){
+      const text = await callGemini(p.prompt);
+      try {
+        const parsed = JSON.parse(text);
+        out.push({ type: p.type, payload: parsed });
+      } catch(e){
+        out.push({ type: p.type, payload: { question: text, choices:[], answer:null }});
+      }
+    }
+    return out;
+  }
+
+  async function callGemini(prompt){
+    // Build endpoint (this uses the legacy simple REST pattern with key param — may require proper Google Cloud setup)
+    const url = (GEMINI_ENDPOINT_BASE || 'https://generativelanguage.googleapis.com/v1beta2') + '/' + (GEMINI_MODEL || 'models/gemini-1.5-pro') + ':generate?key=' + encodeURIComponent(GEMINI_API_KEY);
+    const body = {
+      prompt: { text: prompt },
+      temperature: 0.2,
+      maxOutputTokens: 256
+    };
+    const r = await fetch(url, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    if(!r.ok){
+      const t = await r.text();
+      throw new Error('Gemini API error: ' + t);
+    }
+    const j = await r.json();
+    // try to extract text from candidates
+    const candidate = (j?.candidates && j.candidates[0] && (
+      (typeof j.candidates[0].content === 'string' && j.candidates[0].content) ||
+      (Array.isArray(j.candidates[0].content) && j.candidates[0].content.map(c=>c.text||'').join('')) ||
+      j.candidates[0].content
+    )) || JSON.stringify(j);
+    // normalize if object
+    if(typeof candidate === 'object') return JSON.stringify(candidate);
+    return candidate;
+  }
+
+  // proxy offer click
+  proxyOffer.addEventListener('click', ()=>{
+    alert('我可以幫你製作一個免費 proxy（Render 或 Cloudflare Worker），把金鑰放在那裏，前端只呼叫 proxy。你要我幫忙產生 proxy 程式碼嗎？回覆「幫我做 proxy」。');
+  });
+
+  deployHint.addEventListener('click', ()=>{
+    alert('要把這個頁面放到 GitHub Pages：建立 repo → push 檔案 → Settings → Pages → 選 main / root。若要安全使用 Gemini，請問我幫你做 proxy（我會給你步驟）。');
+  });
+
+  // init render
+  renderProfile();
+
+  </script>
 </body>
 </html>
