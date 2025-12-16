@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>學習小精靈 — 隨機 AI 版</title>
+  <title>學習小精靈 — 隨機 AI 版 (單一 Key)</title>
   <style>
     /* 綠色主題、簡潔安全版 */
     :root{
@@ -67,7 +67,7 @@
 <body>
   <div class="topbar">
     <div class="logo">🌿 學習小精靈 (AI 隨機版)</div>
-    <button class="small secondary" onclick="alert('本網頁純前端執行，您的 API Key 僅儲存於您的瀏覽器 localStorage，不會傳送到任何後端伺服器。')">安全聲明</button>
+    <button class="small secondary" onclick="alert('本網頁使用單一硬編碼 API Key，請注意使用者可以看到此 Key！')">安全聲明 (已修改)</button>
   </div>
 
   <div class="app">
@@ -91,15 +91,10 @@
 
       <section class="content">
         
-        <div class="panel" id="configPanel">
-          <h4 style="margin-top:0">⚙️ AI 設定</h4>
-          <p class="muted" style="margin-bottom:8px">請輸入 Google Gemini API Key 以啟用 AI 出題功能：</p>
-          <div style="display:flex;gap:8px;">
-            <input type="password" id="apiKeyInput" placeholder="貼上你的 API Key (以 AIza 開頭...)" />
-            <button id="saveKeyBtn" class="small">儲存</button>
-          </div>
-          <p style="font-size:12px;color:#888;margin:4px 0;">* Key 會自動存在瀏覽器，下次不用重輸。</p>
+        <div class="panel" style="background:#fff3f3; border:1px solid #e6c0c0;">
+            <p class="muted" style="margin:0; color:#c0392b; font-weight:bold;">⚠️ 注意：此版本已硬編碼 API Key， Key 安全性極低！</p>
         </div>
+        
 
         <div class="panel" id="dashboardPanel">
           <h3 style="margin-top:0">今日任務</h3>
@@ -150,14 +145,14 @@
   let quests = [];
   let currentIndex = 0;
   
-  // 2. 嘗試從 LocalStorage 讀取 Key
-  let GEMINI_API_KEY = localStorage.getItem('AIzaSyA1qz0SSfgtykSctZ35rhLI1IesiSxN4UQ') || '';
+  // 2. ***關鍵修改處：硬編碼您的 API Key***
+  // !!! 請將 YOUR_HARDCODED_GEMINI_API_KEY 替換成您的實際 Key !!!
+  const GEMINI_API_KEY = 'AIzaSyBnR4uGRzHxAeawBqt3uP8nEcZ96fFr0y4';
   const GEMINI_MODEL = 'gemini-1.5-flash'; // Flash 比較快且便宜，適合這種應用
 
   // DOM 元素引用
   const els = {
-    apiKeyInput: document.getElementById('apiKeyInput'),
-    saveKeyBtn: document.getElementById('saveKeyBtn'),
+    // 移除了 apiKeyInput 和 saveKeyBtn
     fetchGeminiBtn: document.getElementById('fetchGeminiBtn'),
     startMockBtn: document.getElementById('startMockBtn'),
     questsPreview: document.getElementById('questsPreview'),
@@ -177,20 +172,11 @@
   };
 
   // 初始化 UI
-  if(GEMINI_API_KEY) els.apiKeyInput.value = GEMINI_API_KEY;
   renderProfile();
 
   // --- 事件監聽 ---
 
-  // 儲存 Key
-  els.saveKeyBtn.addEventListener('click', () => {
-    const key = els.apiKeyInput.value.trim();
-    if(key) {
-      localStorage.setItem('GEMINI_API_KEY', key);
-      GEMINI_API_KEY = key;
-      alert('API Key 已儲存！現在可以按「生成隨機 AI 任務」了。');
-    }
-  });
+  // 移除了儲存 Key 的監聽器
 
   // 離線 Mock 模式
   els.startMockBtn.addEventListener('click', () => {
@@ -201,11 +187,12 @@
     renderQuestsPreview();
   });
 
-  // AI 模式 (重點修改處)
+  // AI 模式 (現在可以直接執行，因為 Key 已硬編碼)
   els.fetchGeminiBtn.addEventListener('click', async () => {
-    if(!GEMINI_API_KEY){
-      alert('請先在上方輸入框填入 Gemini API Key 才能使用 AI 生成功能。');
-      return;
+    // 硬編碼模式下，如果 Key 還是空的，則發出警告
+    if(GEMINI_API_KEY === 'YOUR_HARDCODED_GEMINI_API_KEY' || !GEMINI_API_KEY){
+        alert('請先在程式碼中將 `GEMINI_API_KEY` 替換為您的實際 API Key！');
+        return;
     }
     
     // UI 進入 Loading 狀態
@@ -224,14 +211,13 @@
     }
   });
 
-  // --- AI 核心功能 ---
+  // --- AI 核心功能 (保持不變) ---
 
   async function generateRandomQuests() {
     // 隨機主題列表，讓每次單字都不一樣
     const topics = ['旅行', '食物', '科技', '商業', '情感', '自然', '健康', '運動', '藝術'];
     const randomTopic = topics[Math.floor(Math.random() * topics.length)];
     
-    // 我們同時發送多個請求，或者一個請求要多題。這裡示範分開 Prompt 比較好控制。
     // 使用 Promise.all 平行處理加速
     const prompt1 = `Generate 1 multiple-choice question for English vocabulary learning. 
     Topic: "${randomTopic}". Difficulty: Beginner/Intermediate.
@@ -305,7 +291,7 @@
     }
   }
 
-  // --- UI 渲染邏輯 ---
+  // --- UI 渲染邏輯 (保持不變) ---
 
   function setLoading(isLoading) {
     if(isLoading) {
@@ -379,7 +365,7 @@
       if (!sel) {
         alert('請先選擇一個答案！');
         return;
-      }
+      }<br>
       userAns = parseInt(sel.value);
       isCorrect = (userAns === q.payload.answer);
     } else {
