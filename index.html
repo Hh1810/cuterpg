@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>學習小精靈 — 隨機 AI 版 (單一 Key)</title>
+  <title>學習小精靈 — 隨機 AI 版</title>
   <style>
-    /* 綠色主題、簡潔安全版 */
     :root{
       --bg:#eeffef;
       --panel:#f6fff8;
@@ -25,38 +24,36 @@
     .sidebar{width:260px;flex-shrink:0;}
     .content{flex:1;display:flex;flex-direction:column;gap:12px;min-width:300px;}
     .panel{background:var(--panel);padding:16px;border-radius:12px;box-shadow:var(--shadow);border:1px solid #eef7f0;}
-    .avatar{font-size:44px;background:linear-gradient(90deg,#f0fff3,#e8fff0);width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 12px rgba(0,0,0,0.04);margin:0 auto 10px auto;}
+    .avatar{font-size:44px;background:linear-gradient(90deg,#f0fff3,#e8fff0);width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 12px rgba(0,0,0,0.04);margin:0 auto 10px auto;Cursor: default;}
     .xpbar{width:80%;height:12px;background:#eef6ee;border-radius:999px;margin:8px auto;overflow:hidden;border:1px solid #dcebdc;}
     #xpFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#7bdc93);transition:width 0.3s ease;}
     .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;justify-content:center;}
-    .badge{background:var(--soft);padding:4px 10px;border-radius:999px;font-size:12px;color:#084a20;border:1px solid #ccebd5;}
+    .badge{background:var(--soft);padding:4px 10px;border-radius:999px;font-size:12px;color:#084a20;border:1px solid #ccebd5;font-weight: bold;}
     .quests-preview{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
     .quest-card{padding:12px;border-radius:10px;background:#fff;border:1px dashed #dff4dd;transition:0.2s;}
     .quest-card:hover{background:#fafffb;border-color:var(--accent);}
     .quest-type{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:0.9rem;}
     
-    button{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:background 0.2s;}
+    button{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:background 0.2s;font-family: inherit;}
     button:hover{background:var(--accent-hover);}
     button:disabled{background:#ccc;cursor:not-allowed;}
     button.small{padding:6px 10px;font-size:13px}
-    button.secondary{background:#fff;color:var(--accent);border:1px solid #ccebd5;}
+    button.secondary{background:#fff;color:var(--accent);border:1px solid #ccebd5; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
     button.secondary:hover{background:#f0fff4;}
 
-    label{display:flex;align-items:center;margin:8px 0;padding:8px;border-radius:8px;cursor:pointer;transition:background 0.1s;}
-    label:hover{background:#f4fdf6;}
-    input[type="radio"]{margin-right:10px;accent-color:var(--accent);}
+    label{display:flex;align-items:center;margin:8px 0;padding:8px;border-radius:8px;cursor:pointer;transition:background 0.1s;border: 1px solid transparent;}
+    label:hover{background:#f4fdf6; border-color: #dff7e6;}
+    input[type="radio"]{margin-right:10px;accent-color:var(--accent);transform: scale(1.1);}
     
-    textarea{min-height:100px;width:100%;padding:10px;border-radius:8px;border:1px solid #e6f3e8;font-family:inherit;}
-    input[type="text"], input[type="password"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6f3e8;margin-bottom:8px;}
+    textarea{min-height:100px;width:100%;padding:10px;border-radius:8px;border:1px solid #e6f3e8;font-family:inherit;resize: vertical;}
+    input[type="text"], input[type="password"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6f3e8;margin-bottom:8px;font-family: inherit;}
     
     .muted{color:var(--muted);font-size:14px;line-height:1.5;}
     .footer{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
     
-    /* Loading Spinner */
-    .loader {border: 3px solid #f3f3f3;border-radius: 50%;border-top: 3px solid var(--accent);width: 20px;height: 20px;-webkit-animation: spin 1s linear infinite;animation: spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px;}
+    .loader {border: 3px solid #f3f3f3;border-radius: 50%;border-top: 3px solid var(--accent);width: 16px;height: 16px;animation: spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px;}
     @keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}
-    .hidden {display:none;}
-    .error-msg {color:#d32f2f;background:#ffebee;padding:10px;border-radius:8px;margin-top:8px;font-size:13px;display:none;}
+    .error-msg {color:#d32f2f;background:#ffebee;padding:10px;border-radius:8px;margin-top:8px;font-size:13px;display:none;border: 1px solid #f5c6cb;}
 
     @media(max-width: 600px){
       .sidebar{width:100%;}
@@ -67,7 +64,7 @@
 <body>
   <div class="topbar">
     <div class="logo">🌿 學習小精靈 (AI 隨機版)</div>
-    <button class="small secondary" onclick="alert('本網頁使用單一硬編碼 API Key，請注意使用者可以看到此 Key！')">安全聲明 (已修改)</button>
+    <button class="small secondary" onclick="alert('本網頁純前端執行，您的 API Key 與遊戲進度僅儲存於您的瀏覽器 localStorage。')">安全聲明</button>
   </div>
 
   <div class="app">
@@ -79,6 +76,7 @@
           <div style="color:var(--accent);font-weight:bold;">Lv <span id="level">1</span></div>
           <div class="xpbar"><div id="xpFill"></div></div>
           <p style="font-size:12px;color:var(--muted)">XP: <span id="currentXp">0</span> / 200</p>
+          <button class="small secondary" style="width:100%; margin-top:5px;" onclick="resetGame()">重設進度</button>
         </div>
 
         <div class="panel">
@@ -90,15 +88,18 @@
       </aside>
 
       <section class="content">
-        
-        <div class="panel" style="background:#fff3f3; border:1px solid #e6c0c0;">
-            <p class="muted" style="margin:0; color:#c0392b; font-weight:bold;">⚠️ 注意：此版本已硬編碼 API Key， Key 安全性極低！</p>
+        <div class="panel" id="configPanel">
+          <h4 style="margin-top:0">⚙️ AI 設定</h4>
+          <p class="muted" style="margin-bottom:8px">輸入 Gemini API Key 以啟用 AI 出題：</p>
+          <div style="display:flex;gap:8px;">
+            <input type="password" id="apiKeyInput" placeholder="AIza..." />
+            <button id="saveKeyBtn" class="small">儲存</button>
+          </div>
         </div>
-        
 
         <div class="panel" id="dashboardPanel">
           <h3 style="margin-top:0">今日任務</h3>
-          <p class="muted">點擊下方按鈕，AI 將隨機生成全新題目。</p>
+          <p class="muted">挑戰隨機生成的題目來獲取經驗值！</p>
 
           <div id="questsPreview" class="quests-preview">
             <div style="text-align:center;padding:20px;color:#aaa;border:2px dashed #eee;border-radius:10px;">
@@ -108,51 +109,64 @@
           
           <div id="errorBox" class="error-msg"></div>
 
-          <div style="display:flex;gap:12px;margin-top:20px">
-            <button id="fetchGeminiBtn">✨ 生成隨機 AI 任務</button>
-            <button id="startMockBtn" class="secondary">使用離線範例 (無 AI)</button>
+          <div style="display:flex;gap:12px;margin-top:20px;flex-wrap: wrap;">
+            <button id="fetchGeminiBtn">✨ AI 隨機任務</button>
+            <button id="startMockBtn" class="secondary">📴 離線範例題目</button>
           </div>
         </div>
 
         <div class="panel" id="questPanel" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
              <h3 id="questTitle" style="margin:0">任務</h3>
-             <button id="backBtn" class="secondary small">放棄返回</button>
+             <button id="backBtn" class="secondary small">返回</button>
           </div>
-         
           <div id="questArea"></div>
-          
-          <div style="margin-top:20px;text-align:right;border-top:1px solid #eee;padding-top:15px;">
-            <div id="feedbackArea" style="float:left;font-weight:bold;"></div>
+          <div style="margin-top:20px;text-align:right;border-top:1px solid #eee;padding-top:15px; min-height: 60px;">
+            <div id="feedbackArea" style="float:left;font-weight:bold; line-height: 38px;"></div>
             <button id="submitBtn">提交答案</button>
             <button id="nextQuestBtn" style="display:none">下一題 →</button>
           </div>
         </div>
-
       </section>
     </div>
-
     <div class="footer">© 學習小精靈 — Gemini AI Powered</div>
   </div>
 
   <script>
   /****************************************************************
-   * 核心邏輯
+   * 1. 初始化與狀態管理
    ****************************************************************/
-  
-  // 1. 狀態管理
-  const state = { xp: 0, level: 1, badges: [] };
+  let state = { xp: 0, level: 1, badges: [] };
   let quests = [];
   let currentIndex = 0;
   
-  // 2. ***關鍵修改處：硬編碼您的 API Key***
-  // !!! 請將 YOUR_HARDCODED_GEMINI_API_KEY 替換成您的實際 Key !!!
-  const GEMINI_API_KEY = 'AIzaSyBnR4uGRzHxAeawBqt3uP8nEcZ96fFr0y4';
-  const GEMINI_MODEL = 'gemini-1.5-flash'; // Flash 比較快且便宜，適合這種應用
+  // 載入存檔
+  function loadState() {
+    const saved = localStorage.getItem('ELF_GAME_STATE');
+    if (saved) {
+      state = JSON.parse(saved);
+    }
+    const key = localStorage.getItem('GEMINI_API_KEY');
+    if (key) {
+      document.getElementById('apiKeyInput').value = key;
+    }
+  }
 
-  // DOM 元素引用
+  function saveState() {
+    localStorage.setItem('ELF_GAME_STATE', JSON.stringify(state));
+  }
+
+  function resetGame() {
+    if(confirm('確定要重設所有等級、經驗值與徽章嗎？')){
+      state = { xp: 0, level: 1, badges: [] };
+      saveState();
+      renderProfile();
+    }
+  }
+
   const els = {
-    // 移除了 apiKeyInput 和 saveKeyBtn
+    apiKeyInput: document.getElementById('apiKeyInput'),
+    saveKeyBtn: document.getElementById('saveKeyBtn'),
     fetchGeminiBtn: document.getElementById('fetchGeminiBtn'),
     startMockBtn: document.getElementById('startMockBtn'),
     questsPreview: document.getElementById('questsPreview'),
@@ -171,138 +185,99 @@
     badges: document.getElementById('badges')
   };
 
-  // 初始化 UI
-  renderProfile();
-
-  // --- 事件監聽 ---
-
-  // 移除了儲存 Key 的監聽器
-
-  // 離線 Mock 模式
+  /****************************************************************
+   * 2. 核心邏輯：離線題庫
+   ****************************************************************/
   els.startMockBtn.addEventListener('click', () => {
+    const mockPool = {
+      english: [
+        { question: 'Which word means "勇敢的"?', choices: ['Brave', 'Coy', 'Lazy', 'Bitter'], answer: 0 },
+        { question: 'Choose the opposite of "Huge":', choices: ['Giant', 'Tiny', 'Wide', 'Heavy'], answer: 1 },
+        { question: '"Artificial Intelligence" 的中文是？', choices: ['擴增實境', '虛擬貨幣', '人工智慧', '機器學習'], answer: 2 },
+        { question: 'Which word is a fruit?', choices: ['Carrot', 'Apple', 'Broccoli', 'Onion'], answer: 1 }
+      ],
+      coding: [
+        { question: 'JS 中宣告常數的關鍵字是？', choices: ['var', 'let', 'const', 'define'], answer: 2 },
+        { question: 'HTML 中建立超連結的標籤是？', choices: ['<link>', '<a>', '<href>', '<nav>'], answer: 1 },
+        { question: 'CSS 中哪個屬性控制文字顏色？', choices: ['text-style', 'font-color', 'color', 'background-color'], answer: 2 }
+      ],
+      general: [
+        { question: '太陽系中體積最大的行星是？', choices: ['地球', '火星', '木星', '土星'], answer: 2 },
+        { question: '水的化學分子式是？', choices: ['CO2', 'H2O', 'O2', 'NaCl'], answer: 1 },
+        { question: '一年當中有幾個月有 31 天？', choices: ['5個', '6個', '7個', '8個'], answer: 2 }
+      ]
+    };
+
+    const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    
     quests = [
-      { type:'英文', payload:{ question:'Which word means "友善"?', choices:['hostile','friendly','sad','tall'], answer:1 }},
-      { type:'程式', payload:{ question:'JavaScript 中用來輸出訊息到控制台的是?', choices:['console.log','print','echo','out'], answer:0 }},
+      { type: '英文挑戰 (離線)', payload: getRandom(mockPool.english) },
+      { type: '程式邏輯 (離線)', payload: getRandom(mockPool.coding) },
+      { type: '知識百科 (離線)', payload: getRandom(mockPool.general) }
     ];
+
     renderQuestsPreview();
+    alert('已載入隨機離線題目！');
   });
 
-  // AI 模式 (現在可以直接執行，因為 Key 已硬編碼)
-  els.fetchGeminiBtn.addEventListener('click', async () => {
-    // 硬編碼模式下，如果 Key 還是空的，則發出警告
-    if(GEMINI_API_KEY === 'YOUR_HARDCODED_GEMINI_API_KEY' || !GEMINI_API_KEY){
-        alert('請先在程式碼中將 `GEMINI_API_KEY` 替換為您的實際 API Key！');
-        return;
+  /****************************************************************
+   * 3. AI 功能：Gemini API
+   ****************************************************************/
+  els.saveKeyBtn.addEventListener('click', () => {
+    const key = els.apiKeyInput.value.trim();
+    if(key.startsWith('AIza')) {
+      localStorage.setItem('GEMINI_API_KEY', key);
+      alert('API Key 已儲存！');
+    } else {
+      alert('請輸入有效的 API Key');
     }
+  });
+
+  els.fetchGeminiBtn.addEventListener('click', async () => {
+    const key = localStorage.getItem('GEMINI_API_KEY');
+    if(!key){ alert('請先設定 API Key'); return; }
     
-    // UI 進入 Loading 狀態
     setLoading(true);
     els.errorBox.style.display = 'none';
 
     try {
-      quests = await generateRandomQuests();
+      const topic = ['旅行', '科技', '美食', '太空', '自然'][Math.floor(Math.random()*5)];
+      const prompt = `Generate 2 multiple-choice questions in Traditional Chinese. 
+      One about English vocabulary for "${topic}", one about general knowledge.
+      Return ONLY a JSON array: [{"type":"Category", "question":"...", "choices":["A","B","C","D"], "answer":0}]`;
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      if(!response.ok) throw new Error("API 請求失敗");
+      const data = await response.json();
+      const rawText = data.candidates[0].content.parts[0].text;
+      const cleanText = rawText.replace(/```json|```/g, '').trim();
+      const aiQuests = JSON.parse(cleanText);
+
+      quests = aiQuests.map(q => ({ type: q.type, payload: q }));
+      quests.push({ type: 'AI 挑戰', payload: { question: `說說看，"${topic}" 對你而言代表什麼意義？` } });
+      
       renderQuestsPreview();
     } catch(err) {
-      console.error(err);
-      els.errorBox.textContent = `生成失敗: ${err.message}`;
+      els.errorBox.textContent = "AI 生成失敗: " + err.message;
       els.errorBox.style.display = 'block';
     } finally {
       setLoading(false);
     }
   });
 
-  // --- AI 核心功能 (保持不變) ---
-
-  async function generateRandomQuests() {
-    // 隨機主題列表，讓每次單字都不一樣
-    const topics = ['旅行', '食物', '科技', '商業', '情感', '自然', '健康', '運動', '藝術'];
-    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-    
-    // 使用 Promise.all 平行處理加速
-    const prompt1 = `Generate 1 multiple-choice question for English vocabulary learning. 
-    Topic: "${randomTopic}". Difficulty: Beginner/Intermediate.
-    Format: JSON object with keys: "question", "choices" (array of 4 strings), "answer" (index 0-3).
-    Do NOT use markdown formatting. Just raw JSON.`;
-
-    const prompt2 = `Generate 1 JavaScript or Python coding concept multiple-choice question.
-    Topic: Random basic concept (Variables, Loops, Functions, Arrays).
-    Format: JSON object with keys: "question", "choices" (array of 4 strings), "answer" (index 0-3).
-    Do NOT use markdown formatting. Just raw JSON.`;
-
-    const [res1, res2] = await Promise.all([
-      callGeminiAPI(prompt1),
-      callGeminiAPI(prompt2)
-    ]);
-
-    // 加上一個簡單的問答題
-    const quest3 = {
-        type: 'AI 挑戰',
-        payload: { question: `請用一句話形容"${randomTopic}"對你的意義 (自由回答)` }
-    };
-
-    return [
-      { type: `英文 (${randomTopic})`, payload: parseGeminiResponse(res1) },
-      { type: '程式邏輯', payload: parseGeminiResponse(res2) },
-      quest3
-    ];
-  }
-
-  async function callGeminiAPI(promptText) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-    
-    const body = {
-      contents: [{
-        parts: [{ text: promptText }]
-      }]
-    };
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Gemini API Error: ${response.status} - ${errText}`);
-    }
-
-    const data = await response.json();
-    // 取出文字內容
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error("API 回傳格式不如預期");
-    return text;
-  }
-
-  // 清洗並解析 JSON (重要！解決 AI 回傳 markdown 的問題)
-  function parseGeminiResponse(text) {
-    try {
-      // 移除 ```json 和 ``` 
-      let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-      return JSON.parse(cleanText);
-    } catch (e) {
-      console.warn("JSON Parse Error, fallback to text", text);
-      // 萬一解析失敗，回傳一個錯誤題，避免程式當掉
-      return {
-        question: "AI 解析格式錯誤，原始內容: " + text.substring(0, 50) + "...",
-        choices: ["錯誤", "錯誤", "錯誤", "錯誤"],
-        answer: 0
-      };
-    }
-  }
-
-  // --- UI 渲染邏輯 (保持不變) ---
-
   function setLoading(isLoading) {
-    if(isLoading) {
-      els.fetchGeminiBtn.innerHTML = '<span class="loader"></span> 生成中...';
-      els.fetchGeminiBtn.disabled = true;
-    } else {
-      els.fetchGeminiBtn.innerHTML = '✨ 生成隨機 AI 任務';
-      els.fetchGeminiBtn.disabled = false;
-    }
+    els.fetchGeminiBtn.innerHTML = isLoading ? '<span class="loader"></span> 生成中...' : '✨ AI 隨機任務';
+    els.fetchGeminiBtn.disabled = isLoading;
   }
 
+  /****************************************************************
+   * 4. 遊戲互動邏輯
+   ****************************************************************/
   function renderQuestsPreview(){
     els.questsPreview.innerHTML = '';
     quests.forEach((q, i) => {
@@ -310,13 +285,11 @@
       card.className = 'quest-card';
       card.innerHTML = `
         <div class="quest-type">${q.type}</div>
-        <div style="font-size:14px">${q.payload.question}</div>
+        <div style="font-size:14px; color:#555;">${q.payload.question}</div>
         <button class="small" style="margin-top:8px" onclick="startQuest(${i})">開始挑戰</button>
       `;
       els.questsPreview.appendChild(card);
     });
-    els.dashboardPanel.style.display = 'block';
-    els.questPanel.style.display = 'none';
   }
 
   window.startQuest = function(index) {
@@ -325,53 +298,32 @@
     els.dashboardPanel.style.display = 'none';
     els.questPanel.style.display = 'block';
     els.questTitle.textContent = q.type;
-    
-    // 重置按鈕狀態
     els.submitBtn.style.display = 'inline-block';
     els.nextQuestBtn.style.display = 'none';
     els.feedbackArea.textContent = '';
-    els.feedbackArea.className = '';
-
     els.questArea.innerHTML = `<p style="font-size:1.1rem;font-weight:500">${q.payload.question}</p>`;
     
     if (q.payload.choices) {
-      // 選擇題
       q.payload.choices.forEach((c, i) => {
         const label = document.createElement('label');
         label.innerHTML = `<input type="radio" name="choice" value="${i}"> ${c}`;
         els.questArea.appendChild(label);
       });
     } else {
-      // 簡答題
-      const ta = document.createElement('textarea');
-      ta.id = "freeTextAns";
-      ta.placeholder = '請輸入你的想法...';
-      els.questArea.appendChild(ta);
+      els.questArea.innerHTML += `<textarea id="freeTextAns" placeholder="請在此輸入你的回答..."></textarea>`;
     }
   };
-
-  els.backBtn.addEventListener('click', () => {
-    els.questPanel.style.display = 'none';
-    els.dashboardPanel.style.display = 'block';
-  });
 
   els.submitBtn.addEventListener('click', () => {
     const q = quests[currentIndex];
     let isCorrect = false;
-    let userAns = null;
 
     if (q.payload.choices) {
       const sel = document.querySelector('input[name="choice"]:checked');
-      if (!sel) {
-        alert('請先選擇一個答案！');
-        return;
-      }<br>
-      userAns = parseInt(sel.value);
-      isCorrect = (userAns === q.payload.answer);
+      if (!sel) return alert('請先選擇答案！');
+      isCorrect = parseInt(sel.value) === q.payload.answer;
     } else {
-      // 自由簡答題都算對
-      const text = document.getElementById('freeTextAns').value;
-      if(!text.trim()) { alert('請輸入內容'); return; }
+      if(!document.getElementById('freeTextAns').value.trim()) return alert('請輸入內容');
       isCorrect = true; 
     }
 
@@ -380,25 +332,32 @@
       els.feedbackArea.style.color = 'var(--accent)';
       addXp(50);
     } else {
-      els.feedbackArea.textContent = `❌ 答錯了。正確答案是: ${q.payload.choices[q.payload.answer]}`;
+      const correctText = q.payload.choices[q.payload.answer];
+      els.feedbackArea.textContent = `❌ 答錯了。正確答案：${correctText}`;
       els.feedbackArea.style.color = '#d32f2f';
-      addXp(10); // 安慰獎
+      addXp(10);
     }
 
     els.submitBtn.style.display = 'none';
     if(currentIndex < quests.length - 1) {
       els.nextQuestBtn.style.display = 'inline-block';
     } else {
-      // 最後一題
-      const finishBtn = document.createElement('button');
-      finishBtn.textContent = '完成今日訓練';
-      finishBtn.onclick = () => { els.questPanel.style.display='none'; els.dashboardPanel.style.display='block'; };
-      els.feedbackArea.parentNode.appendChild(finishBtn);
+      const btn = document.createElement('button');
+      btn.textContent = '完成今日訓練';
+      btn.className = 'small';
+      btn.onclick = () => { 
+        els.questPanel.style.display='none'; 
+        els.dashboardPanel.style.display='block';
+        els.questsPreview.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-weight:bold;">✨ 任務完成！明天再來吧！</div>';
+      };
+      els.feedbackArea.appendChild(btn);
     }
   });
 
-  els.nextQuestBtn.addEventListener('click', () => {
-    startQuest(currentIndex + 1);
+  els.nextQuestBtn.addEventListener('click', () => startQuest(currentIndex + 1));
+  els.backBtn.addEventListener('click', () => {
+    els.questPanel.style.display = 'none';
+    els.dashboardPanel.style.display = 'block';
   });
 
   function addXp(amount) {
@@ -406,9 +365,10 @@
     if (state.xp >= 200) {
       state.level++;
       state.xp -= 200;
-      if (!state.badges.includes('Lv Up!')) state.badges.push('Lv Up!');
-      alert(`恭喜升級！現在是 Lv ${state.level}`);
+      if (!state.badges.includes('開拓者')) state.badges.push('開拓者');
+      alert(`恭喜升級！Lv ${state.level}`);
     }
+    saveState();
     renderProfile();
   }
 
@@ -416,7 +376,6 @@
     els.xpFill.style.width = Math.min(100, (state.xp / 200) * 100) + '%';
     els.currentXp.textContent = state.xp;
     els.level.textContent = state.level;
-    
     if (state.badges.length > 0) {
       els.badges.innerHTML = '';
       state.badges.forEach(b => {
@@ -427,6 +386,10 @@
       });
     }
   }
+
+  // 程式啟動
+  loadState();
+  renderProfile();
 
   </script>
 </body>
